@@ -1,0 +1,54 @@
+org: pats09
+app: aws-python-http-api-project
+service: aws-python-http-api-project
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.8
+  lambdaHashingVersion: '20201221'
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action: "dynamodb:*"
+      Resource: "*"
+  environment:
+    DYNAMODB_CARDS_TABLE_NAME: challenge-one
+
+functions:
+  createUser:
+    handler: handler.create_user
+    events:
+      - httpApi:
+          path: /create-user
+          method: post
+  createOrder:
+    handler: handler.create_order
+    events:
+      - httpApi:
+          path: /create-order
+          method: post
+  getOrderList:
+    handler: handler.get_order
+    events:
+      - httpApi:
+          path: /order-list
+          method: get
+
+package:
+  exclude:
+    - venv/**
+    - node_modules/**
+
+resources:
+  Resources:
+    EcommerceDynamodbTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: _id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: user_id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.DYNAMODB_CARDS_TABLE_NAME}
