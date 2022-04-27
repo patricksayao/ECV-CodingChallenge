@@ -33,6 +33,12 @@ functions:
       - httpApi:
           path: /order-list
           method: get
+  getAllUsers:
+    handler: handler.get_all_user
+    events:
+      - httpApi:
+          path: /user-list
+          method: get
 
 package:
   exclude:

@@ -76,3 +76,20 @@ def get_order(event, context):
     response = {"statusCode": 200, "body": json.dumps(return_body)}
 
     return response
+
+def get_all_user(event, context):
+    body = {
+        "message": "I'm getting all users",
+        "input": event,
+    }
+
+    table_name = os.getenv("DYNAMODB_CARDS_TABLE_NAME")
+
+    return_body = {}
+    return_body["items"] = DynamodbGateway.scan_table(
+        table_name=table_name
+    )
+
+    response = {"statusCode": 200, "body": json.dumps(return_body)}
+
+    return response
